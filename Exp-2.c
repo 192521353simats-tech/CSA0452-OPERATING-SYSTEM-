@@ -1,27 +1,21 @@
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-    int src, dst;
-    char buf[1024];
-    ssize_t n;
-
-    if (argc != 3) return printf("Usage: %s <src> <dst>\n", argv[0]), 1;
-    src = open(argv[1], O_RDONLY);
-    dst = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-
-    if (src < 0 || dst < 0)
-    {
-        perror("Error opening files");
+int main() {
+    int source, dest;
+    char buffer[100];
+    int n;
+    source = open("source.txt", O_RDONLY);
+    dest = open("dest.txt", O_WRONLY | O_CREAT, 0644);
+    if (source < 0 || dest < 0) {
+        printf("Error opening file\n");
         return 1;
     }
-    while ((n = read(src, buf, sizeof(buf))) > 0)
-    {
-        write(dst, buf, n);
+    while ((n = read(source, buffer, sizeof(buffer))) > 0) {
+        write(dest, buffer, n);
     }
-    close(src);
-    close(dst);
-    printf("Copy complete.\n");
+    close(source);
+    close(dest);
+    printf("File copied successfully\n");
     return 0;
 }
